@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.fixture
 def short_text():
     return "Cool dogs wear da sunglasses."
@@ -19,6 +20,7 @@ def easy_text():
             "favorite puzzles together and frame them. The puzzles look "
             "so nice on the wall."
         )
+
 
 @pytest.fixture
 def long_text():
