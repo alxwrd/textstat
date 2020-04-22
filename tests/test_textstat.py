@@ -1,38 +1,57 @@
 """Test suite for textstat
 """
 
+import pytest
+
 import textstat
 
 
-def test_char_count(long_text):
-    textstat.set_lang("en_US")
+@pytest.mark.parametrize("lang, expected", [("en_US", 1750)])
+def test_char_count(long_text, lang, expected):
+    textstat.set_lang(lang)
     count = textstat.char_count(long_text)
-    count_spaces = textstat.char_count(
-        long_text, ignore_spaces=False
-    )
 
-    assert count == 1750
-    assert count_spaces == 2123
+    assert count == expected
 
 
-def test_letter_count(long_text):
-    textstat.set_lang("en_US")
+@pytest.mark.parametrize("lang, expected", [("en_US", 2123)])
+def test_char_count_spaces(long_text, lang, expected):
+    textstat.set_lang(lang)
+    count = textstat.char_count(long_text, ignore_spaces=False)
+
+    assert count == expected
+
+
+@pytest.mark.parametrize("lang, expected", [("en_US", 1688)])
+def test_letter_count(long_text, lang, expected):
+    textstat.set_lang(lang)
     count = textstat.letter_count(long_text)
-    count_spaces = textstat.letter_count(
-        long_text, ignore_spaces=False
-    )
 
-    assert count == 1688
-    assert count_spaces == 2061
+    assert count == expected
 
 
-def test_lexicon_count(long_text):
-    textstat.set_lang("en_US")
+@pytest.mark.parametrize("lang, expected", [("en_US", 2061)])
+def test_letter_count_spaces(long_text, lang, expected):
+    textstat.set_lang(lang)
+    count = textstat.letter_count(long_text, ignore_spaces=False)
+
+    assert count == expected
+
+
+@pytest.mark.parametrize("lang, expected", [("en_US", 372)])
+def test_lexicon_count(long_text, lang, expected):
+    textstat.set_lang(lang)
     count = textstat.lexicon_count(long_text)
-    count_punc = textstat.lexicon_count(long_text, removepunct=False)
 
-    assert count == 372
-    assert count_punc == 376
+    assert count == expected
+
+
+@pytest.mark.parametrize("lang, expected", [("en_US", 376)])
+def test_lexicon_count_punctuation(long_text, lang, expected):
+    textstat.set_lang("en_US")
+    count = textstat.lexicon_count(long_text, removepunct=False)
+
+    assert count == 376
 
 
 def test_syllable_count(long_text):
@@ -77,41 +96,22 @@ def test_avg_sentence_per_word(long_text):
     assert avg == 0.04
 
 
-def test_flesch_reading_ease(long_text):
-    textstat.set_lang("en_US")
+@pytest.mark.parametrize("lang, expected",
+        [
+            ("en_US", 64.75),
+            ("de_DE", 63.1),
+            ("es_ES", 84.37),
+            ("fr_FR", 80.31),
+            ("it_IT", 89.27),
+            ("nl_NL", 61.97),
+            ("ru_RU", 116.45)
+        ]
+)
+def test_flesch_reading_ease(long_text, lang, expected):
+    textstat.set_lang(lang)
     score = textstat.flesch_reading_ease(long_text)
 
-    assert score == 64.75
-
-    textstat.set_lang("de_DE")
-    score = textstat.flesch_reading_ease(long_text)
-
-    assert score == 63.1
-
-    textstat.set_lang("es_ES")
-    score = textstat.flesch_reading_ease(long_text)
-
-    assert score == 84.37
-
-    textstat.set_lang("fr_FR")
-    score = textstat.flesch_reading_ease(long_text)
-
-    assert score == 80.31
-
-    textstat.set_lang("it_IT")
-    score = textstat.flesch_reading_ease(long_text)
-
-    assert score == 89.27
-
-    textstat.set_lang("nl_NL")
-    score = textstat.flesch_reading_ease(long_text)
-
-    assert score == 61.97
-
-    textstat.set_lang("ru_RU")
-    score = textstat.flesch_reading_ease(long_text)
-
-    assert score == 116.45
+    assert score == expected
 
 
 def test_flesch_kincaid_grade(long_text):
